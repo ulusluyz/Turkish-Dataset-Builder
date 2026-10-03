@@ -1,0 +1,38 @@
+[
+  {
+    "doc_count": 1000,
+    "input_size_mb": 0.38,
+    "initial_rss_mb": 22.38,
+    "peak_rss_mb": 23.5,
+    "net_rss_growth_mb": 1.12,
+    "duration_sec": 3.82,
+    "docs_per_sec": 261.4
+  },
+  {
+    "doc_count": 2500,
+    "input_size_mb": 0.96,
+    "initial_rss_mb": 23.5,
+    "peak_rss_mb": 23.88,
+    "net_rss_growth_mb": 0.38,
+    "duration_sec": 9.52,
+    "docs_per_sec": 262.6
+  },
+  {
+    "doc_count": 5000,
+    "input_size_mb": 1.92,
+    "initial_rss_mb": 23.88,
+    "peak_rss_mb": 23.83,
+    "net_rss_growth_mb": -0.05,
+    "duration_sec": 19.29,
+    "docs_per_sec": 259.2
+  },
+  {
+    "doc_count": 10000,
+    "input_size_mb": 3.84,
+    "initial_rss_mb": 23.83,
+    "peak_rss_mb": 24.89,
+    "net_rss_growth_mb": 1.06,
+    "duration_sec": 38.41,
+    "docs_per_sec": 260.4
+  }
+]
