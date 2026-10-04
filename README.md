@@ -1,6 +1,6 @@
-# NEXT LLM — Türkçe Veri Temizleme, Kalite Kontrol ve Dataset Builder
+# Turkish Dataset Builder
 
-**NEXT LLM Türkçe Dataset Builder**, ham Türkçe verileri makine öğrenmesi ve dil modeli eğitimi için kullanılabilir, temiz, doğrulanmış ve yapılandırılmış datasetlere dönüştürmek için geliştirilmiş yerel bir veri işleme sistemidir.
+**Turkish Dataset Builder**, ham Türkçe verileri makine öğrenmesi ve dil modeli eğitimi için kullanılabilir, temiz, doğrulanmış ve yapılandırılmış datasetlere dönüştürmek için geliştirilmiş yerel bir veri işleme uygulamasıdır.
 
 Sistem; metinleri teknik olarak temizler, Türkçe kalite sinyallerini analiz eder, bozuk ve anlamsız içerikleri ayırır, duplicate ve near-duplicate kayıtları temizler, veriyi `train / validation / test` olarak böler ve sonuçları doğrulanmış JSONL datasetleri halinde üretir.
 
@@ -17,8 +17,8 @@ Sistem; metinleri teknik olarak temizler, Türkçe kalite sinyallerini analiz ed
 * CSV
 * TSV
 * XML
-* HTML
-* YAML
+* HTML / HTM
+* YAML / YML
 * PDF
 * Otomatik JSON/JSONL text-field keşfi
 * UTF-8 ve Türkçe karakter koruması
@@ -32,10 +32,10 @@ Sistem; metinleri teknik olarak temizler, Türkçe kalite sinyallerini analiz ed
 * Türkçe kalite analizi
 * 0–100 kalite skoru
 * Exact duplicate temizleme
-* SHA256 tabanlı fingerprint
+* SHA256 fingerprint
 * MinHash + LSH near-duplicate temizleme
 * SQLite tabanlı disk-backed index
-* Configurable similarity threshold
+* Yapılandırılabilir similarity threshold
 * Çok kısa veri filtreleme
 * Uzun metinleri paragraf/cümle sınırlarından bölme
 * Train / Validation / Test split
@@ -69,8 +69,6 @@ Birincil ve doğrulanmış çalışma ortamı:
 * **Debian 13 (Trixie)**
 * **Linux x86_64 / amd64**
 
-Debian 13, Python 3.13 serisini varsayılan Python 3 olarak sağlar.
-
 Sistem CPU üzerinde çalışır.
 
 **GPU gerekli değildir.**
@@ -79,23 +77,21 @@ CUDA, ROCm veya herhangi bir yapay zekâ hızlandırıcısı kullanılmaz.
 
 ---
 
-# Minimum Sistem Gereksinimleri
-
-Dataset Builder düşük RAM tüketimi için streaming mimarisi kullanır. Ancak minimum sistem gereksinimi ile önerilen üretim sistemi birbirinden ayrılmalıdır.
+# Sistem Gereksinimleri
 
 ## Minimum
 
-| Bileşen         | Gereksinim                                                  |
-| --------------- | ----------------------------------------------------------- |
-| İşletim sistemi | Debian 13 x86_64                                            |
-| CPU             | 2 çekirdek                                                  |
-| RAM             | **2 GB**                                                    |
-| Disk            | **5 GB boş alan + dataset boyutu için gerekli alan**        |
-| Python          | **3.13**                                                    |
-| GPU             | Gerekli değil                                               |
-| İnternet        | Kurulum sırasında bağımlılık indirmek için gerekli olabilir |
+| Bileşen         | Gereksinim                                             |
+| --------------- | ------------------------------------------------------ |
+| İşletim sistemi | Debian 13 x86_64                                       |
+| CPU             | 2 çekirdek                                             |
+| RAM             | **2 GB**                                               |
+| Disk            | **5 GB boş alan + dataset için gerekli alan**          |
+| Python          | **3.13**                                               |
+| GPU             | Gerekli değil                                          |
+| İnternet        | Kurulum sırasında bağımlılık indirmek için gerekebilir |
 
-2 GB RAM sistemin çalışması için minimum hedef değerdir. Büyük datasetlerde işlem süresi ve disk kullanımı artabilir.
+2 GB RAM minimum çalışma hedefidir. Büyük datasetlerde işlem süresi ve disk kullanımı artabilir.
 
 ## Önerilen
 
@@ -104,12 +100,12 @@ Dataset Builder düşük RAM tüketimi için streaming mimarisi kullanır. Ancak
 | İşletim sistemi | Debian 13 x86_64                 |
 | CPU             | 4+ çekirdek                      |
 | RAM             | **8 GB+**                        |
-| Disk            | **SSD/NVMe**                     |
+| Disk            | **SSD / NVMe**                   |
 | Boş disk        | Dataset boyutunun en az 2–3 katı |
 | Python          | 3.13                             |
 | GPU             | Gerekli değil                    |
 
-Büyük datasetler için özellikle SSD/NVMe kullanılması önerilir; çünkü duplicate indexleri, checkpoint verileri, output shardları ve raporlar disk üzerinde tutulur.
+Büyük datasetlerde SSD/NVMe kullanılması önerilir. Duplicate indexleri, checkpoint verileri, output shardları ve raporlar disk üzerinde tutulur.
 
 ---
 
@@ -147,26 +143,28 @@ Exact duplicate ve near-duplicate indexleri SQLite üzerinde disk-backed olarak 
 
 Bu nedenle dataset boyutunun RAM ile aynı oranda büyümesi hedeflenmez.
 
-### Empirical benchmark
+## Ölçülen Scaling Benchmark
 
 Gerçek pipeline kullanılarak yapılan scaling testinde:
 
-| Doküman |   Input | Peak RSS |
-| ------: | ------: | -------: |
-|   1.000 | 0.38 MB | 23.50 MB |
-|   2.500 | 0.96 MB | 23.88 MB |
-|   5.000 | 1.92 MB | 23.83 MB |
-|  10.000 | 3.84 MB | 24.89 MB |
+| Doküman |   Input | Initial RSS | Peak RSS |  Ölçülen hız |
+| ------: | ------: | ----------: | -------: | -----------: |
+|   1.000 | 0.38 MB |    22.38 MB | 23.50 MB | 261.8 docs/s |
+|   2.500 | 0.96 MB |    23.50 MB | 23.88 MB | 262.6 docs/s |
+|   5.000 | 1.92 MB |    23.88 MB | 23.83 MB | 259.2 docs/s |
+|  10.000 | 3.84 MB |    23.83 MB | 24.89 MB | 260.3 docs/s |
 
-10.000 dokümana kadar ölçülen testlerde RAM kullanımı yaklaşık 24–25 MB seviyesinde kalmıştır.
+Benchmark; ingestion, cleaning, quality scoring, exact SHA256 deduplication, MinHash/LSH near-deduplication, split, sharding, manifest ve final validation aşamalarını kapsamaktadır.
 
-Bu sonuçlar **ölçülen benchmark aralığını** gösterir; 100 GB gibi daha büyük datasetler için doğrulanmamış RAM garantisi verilmez.
+10.000 dokümana kadar yapılan ölçümlerde peak RSS yaklaşık **25 MB'ın altında** kalmıştır.
+
+> Bu sonuçlar yalnızca ölçülen benchmark aralığını gösterir. Daha büyük datasetler için ölçülmemiş RAM kullanımına ilişkin garanti verilmez.
 
 ---
 
-# Veri Kaynağı
+# Veri Kaynakları
 
-Sistem aşağıdaki veri türlerini kabul eder:
+Desteklenen formatlar:
 
 ```text
 .txt
@@ -187,7 +185,7 @@ Sistem aşağıdaki veri türlerini kabul eder:
 
 PDF desteği metin tabanlı PDF'ler içindir.
 
-Görüntü tabanlı / taranmış PDF'ler otomatik OCR ile dönüştürülmez; uygun olmayan içerikler quarantine/review sürecine alınabilir.
+Görüntü tabanlı veya taranmış PDF'ler otomatik OCR ile dönüştürülmez. Uygun olmayan içerikler quarantine/review sürecine alınabilir.
 
 ---
 
@@ -204,7 +202,7 @@ Sistem Türkçe karakterleri korur:
 ü Ü
 ```
 
-Ayrıca ASCII ile yazılmış Türkçe metinleri değerlendirebilir:
+ASCII ile yazılmış Türkçe metinler de kalite analizinde değerlendirilebilir:
 
 ```text
 Bugun hava cok guzel.
@@ -212,13 +210,13 @@ Bugun hava cok guzel.
 
 Encoding kaynaklı bozulmalar için mojibake düzeltme uygulanabilir.
 
-Örnek:
+Örneğin:
 
 ```text
 TÃ¼rkiye
 ```
 
-→
+şu hale getirilebilir:
 
 ```text
 Türkiye
@@ -299,9 +297,9 @@ Threshold yapılandırılabilir.
 Varsayılan split:
 
 ```text
-Train      98%
-Validation  1%
-Test        1%
+Train       98%
+Validation   1%
+Test         1%
 ```
 
 Split işleminden önce duplicate temizliği uygulanır.
@@ -382,6 +380,8 @@ Aşağıdaki işlemler kullanılmaz:
 * Yapay metin üretimi
 * Model tabanlı yeniden yazım
 
+Kaynak kod üzerinde yapılan bağımsız source-truth auditinde veri işleme katmanında harici LLM API, OpenAI SDK, neural network, paraphrasing engine veya metin üretim sistemi tespit edilmemiştir.
+
 Temizleme işlemleri teknik ve yapısaldır:
 
 ```text
@@ -418,9 +418,9 @@ GUI üzerinden:
 * Analyze
 * Configuration
 * Build
-* Progress/statistics
+* Progress / statistics
 * Review Queue
-* Before/After preview
+* Before / After preview
 * Reports
 
 işlemleri yapılabilir.
@@ -483,9 +483,7 @@ sudo apt update
 sudo apt install -y python3 python3-venv python3-pip
 ```
 
-Debian 13'te `python3.13-venv`, Python sanal ortamlarını oluşturmak için sağlanır.
-
-Projeyi klonladıktan sonra:
+Projeyi aldıktan sonra:
 
 ```bash
 cd dataset-cleaner
@@ -513,7 +511,7 @@ pip install -r requirements.txt
 
 # Çalıştırma
 
-### GUI
+## GUI
 
 ```bash
 ./run.sh
@@ -533,7 +531,7 @@ http://127.0.0.1:8000
 
 adresini aç.
 
-### CLI
+## CLI
 
 ```bash
 python3 -m dataset_cleaner \
@@ -580,7 +578,7 @@ FINAL DATASET
 
 Pipeline SQLite checkpoint sistemi kullanır.
 
-Uzun süren işlemlerde işlem kesilirse:
+Uzun süren işlem kesilirse:
 
 ```bash
 --resume
@@ -588,7 +586,7 @@ Uzun süren işlemlerde işlem kesilirse:
 
 parametresi ile kaldığı yerden devam edilebilir.
 
-Tek bir bozuk dosyanın tüm dataset işlemini durdurması hedeflenmez; hata kayıtları ayrıca tutulur.
+Tek bir bozuk dosyanın tüm dataset işlemini durdurmaması hedeflenir; hata kayıtları ayrıca tutulur.
 
 ---
 
@@ -629,7 +627,7 @@ Dataset output ayrı bir dizine yazılır.
 
 # Testler
 
-Proje otomatik test suite içerir.
+Proje kapsamlı otomatik test suite içerir.
 
 Test kapsamı:
 
@@ -657,6 +655,8 @@ Test kapsamı:
 * Pipeline
 * Validation
 
+Son doğrulama sırasında **18 test suite** başarıyla tamamlanmıştır.
+
 Testleri çalıştır:
 
 ```bash
@@ -665,16 +665,18 @@ python3 -m unittest discover -s tests -v
 
 ---
 
-# Mevcut Doğrulama Durumu
+# Final Audit Durumu
 
 Bağımsız final audit sonucunda:
 
 ```text
-VERIFIED:             50 / 51
-PARTIALLY CONFIRMED:   1 / 51
-NOT_PROVEN:            0
-FAILED:                0
+VERIFIED:              50 / 51
+PARTIALLY CONFIRMED:    1 / 51
+NOT_PROVEN:             0
+FAILED:                 0
 ```
+
+## Kısmi gereksinim
 
 Tek kısmi gereksinim:
 
@@ -682,23 +684,53 @@ Tek kısmi gereksinim:
 #35 — Parallel Processing
 ```
 
-`max_workers` configuration seçeneği mevcut olmakla birlikte mevcut pipeline tek CPU process üzerinde sequential çalışmaktadır.
+`max_workers` configuration seçeneği mevcut olmakla birlikte mevcut pipeline gerçek anlamda paralel CPU processing yapmamaktadır; pipeline tek CPU process üzerinde sequential çalışmaktadır.
 
-Bu durum veri temizleme doğruluğunu etkilemez; yalnızca paralel işlem özelliğinin henüz uygulanmadığını gösterir.
+Bu durum veri temizleme doğruluğunu etkilemez. Yalnızca yapılandırmada bulunan paralel işlem kapasitesinin mevcut sürümde henüz aktif olmadığını gösterir.
+
+---
+
+# Scaling Benchmark Sonucu
+
+Benchmark sırasında aşağıdaki değerler ölçülmüştür:
+
+```text
+1,000 docs   → 261.8 docs/s
+2,500 docs   → 262.6 docs/s
+5,000 docs   → 259.2 docs/s
+10,000 docs  → 260.3 docs/s
+```
+
+Peak RSS:
+
+```text
+1,000 docs   → 23.50 MB
+2,500 docs   → 23.88 MB
+5,000 docs   → 23.83 MB
+10,000 docs  → 24.89 MB
+```
+
+Benchmark gerçek pipeline'ın tamamını kapsamaktadır.
+
+100 GB veya daha büyük datasetler için benchmark yapılmadığından, bu ölçümlere dayanarak büyük datasetler için kesin RAM garantisi verilmez.
 
 ---
 
 # Proje Raporları
 
-Audit ve benchmark sonuçları:
+Doğrulama, audit ve benchmark çıktıları `reports/` altında tutulur.
+
+Önemli raporlar:
 
 ```text
 reports/
-├── requirements_verification.md
+├── FINAL_AUDIT_REPORT.md
 ├── benchmark.md
 ├── scaling_benchmark_results.json
-└── FINAL_AUDIT_REPORT.md
+└── PROJECT_NAME_AUDIT.md
 ```
+
+Repository'deki mevcut rapor dosyaları sürüme göre ek doğrulama çıktıları da içerebilir.
 
 ---
 
@@ -710,18 +742,14 @@ reports/
 4. **Harici AI API kullanılmaz.**
 5. **Metin yeniden yazılmaz.**
 6. **Dataset RAM'e komple yüklenmez.**
-7. **Duplicate kayıtlar silinmek yerine kayıt altına alınır.**
+7. **Duplicate kayıtlar izlenebilir şekilde kayıt altına alınır.**
 8. **Near-duplicate kontrolü disk-backed olarak yapılır.**
 9. **Dataset split işleminde leakage kontrol edilir.**
 10. **Final dataset build sonrası tekrar doğrulanır.**
 11. **İşlem sonuçları SHA256 manifest ile izlenebilir.**
 12. **Aynı konfigürasyon ve seed ile reproducible output hedeflenir.**
-
----
-
-# Lisans
-
-Bu proje için lisans bilgisi repository içerisindeki `LICENSE` dosyasına göre değerlendirilmelidir.
+13. **Input ve output birbirinden ayrı tutulur.**
+14. **Temizleme işlemi kaynak metne yeni bilgi eklemez.**
 
 ---
 
@@ -729,8 +757,29 @@ Bu proje için lisans bilgisi repository içerisindeki `LICENSE` dosyasına gör
 
 **Production-oriented initial release**
 
-Pipeline; Türkçe veri ingestion, cleaning, quality control, deduplication, dataset generation ve final validation süreçleri açısından bağımsız audit ve benchmark süreçlerinden geçirilmiştir.
+Turkish Dataset Builder; veri ingestion, cleaning, quality control, deduplication, dataset generation ve final validation süreçleri açısından bağımsız audit ve benchmark süreçlerinden geçirilmiştir.
 
-**50/51 gereksinim doğrulanmış, 1 gereksinim kısmi durumdadır.**
+Son audit:
 
-Paralel CPU processing (`#35`) mevcut sürümde uygulanmamıştır.
+```text
+50 / 51 VERIFIED
+1 / 51 PARTIALLY CONFIRMED
+0 NOT_PROVEN
+0 FAILED
+```
+
+Mevcut kısmi gereksinim:
+
+```text
+#35 — Parallel Processing
+```
+
+`max_workers` yapılandırması mevcut olmakla birlikte paralel CPU processing henüz aktif değildir.
+
+Bunun dışındaki **50 gereksinim doğrulanmıştır.**
+
+---
+
+# Lisans
+
+Bu proje için lisans bilgisi repository içerisindeki `LICENSE` dosyasına göre değerlendirilmelidir.
