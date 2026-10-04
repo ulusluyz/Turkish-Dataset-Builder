@@ -1,6 +1,6 @@
 # FINAL INDEPENDENT AUDIT REPORT
 
-**Project:** NEXT LLM — Türkçe Veri Temizleme, Kalite Kontrol ve Dataset Builder
+**Project:** Turkish Dataset Builder
 **Operating System:** Debian 13 (x86_64)
 **Date:** October 2024
 

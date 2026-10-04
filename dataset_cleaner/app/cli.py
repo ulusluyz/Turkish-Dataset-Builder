@@ -12,7 +12,7 @@ def load_config(config_path: str):
     return {}
 
 def main():
-    parser = argparse.ArgumentParser(description="NEXT LLM Dataset Cleaner & Quality Control CLI")
+    parser = argparse.ArgumentParser(description="Turkish Dataset Builder CLI")
     parser.add_argument("--input", type=str, help="Path to raw input directory or file")
     parser.add_argument("--output", type=str, help="Path to final output dataset directory")
     parser.add_argument("--config", type=str, default="config.yaml", help="Path to config.yaml")

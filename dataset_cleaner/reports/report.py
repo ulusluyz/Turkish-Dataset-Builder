@@ -44,7 +44,7 @@ def generate_reports(
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>NEXT LLM Dataset Report</title>
+    <title>Turkish Dataset Builder Report</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 40px; background: #f8f9fa; color: #212529; }}
         .card {{ background: white; padding: 24px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 24px; }}
@@ -57,7 +57,7 @@ def generate_reports(
     </style>
 </head>
 <body>
-    <h1>NEXT LLM Corpus Quality & Dataset Report</h1>
+    <h1>Turkish Dataset Builder — Corpus Quality & Dataset Report</h1>
     <div class="card">
         <h2>Summary Statistics</h2>
         <table>
@@ -81,7 +81,7 @@ def generate_reports(
 
     # Save README_DATASET.md
     readme_path = os.path.join(final_dir, "README_DATASET.md")
-    readme_content = f"""# NEXT LLM Final Clean Corpus
+    readme_content = f"""# Turkish Dataset Builder Final Clean Corpus
 
 ## Dataset Summary
 - **Discovered Files:** {stats.get('discovered_files', 0)}

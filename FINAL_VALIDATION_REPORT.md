@@ -1,7 +1,7 @@
 # FINAL VALIDATION REPORT
 
 ## 1. Executive Summary
-The **NEXT LLM — Türkçe Veri Temizleme, Kalite Kontrol ve Dataset Builder** package has passed all automated unit, integration, memory benchmark, and frontend verification tests on Debian 13 (Linux x86_64).
+The **Turkish Dataset Builder** package has passed all automated unit, integration, memory benchmark, and frontend verification tests on Debian 13 (Linux x86_64).
 
 ---
 

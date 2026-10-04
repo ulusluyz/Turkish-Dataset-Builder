@@ -1,6 +1,6 @@
 # Requirements & Implementation Independent Verification Matrix
 
-This document presents a rigorous independent audit of all 51 prompt requirements for the **NEXT LLM — Türkçe Veri Temizleme, Kalite Kontrol ve Dataset Builder** project.
+This document presents a rigorous independent audit of all 51 prompt requirements for the **Turkish Dataset Builder** project.
 
 Status Legend:
 - **VERIFIED**: Fully implemented in codebase and backed by dedicated unit/integration tests.

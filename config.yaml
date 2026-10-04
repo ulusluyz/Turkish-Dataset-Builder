@@ -1,4 +1,4 @@
-# NEXT LLM Dataset Cleaner Configuration
+# Turkish Dataset Builder Configuration
 
 dataset:
   train_ratio: 0.98
