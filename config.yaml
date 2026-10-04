@@ -1,0 +1,46 @@
+# Turkish Dataset Builder Configuration
+
+dataset:
+  train_ratio: 0.98
+  validation_ratio: 0.01
+  test_ratio: 0.01
+  seed: 42
+  shard_max_documents: 100000
+  shard_max_bytes: 104857600 # 100 MB per shard
+
+cleaning:
+  normalize_unicode: true
+  unicode_form: "NFC"
+  fix_mojibake: true
+  clean_html: true
+  clean_markdown_wrapping: false
+  unescape_html_entities: true
+  normalize_whitespace: true
+  remove_control_characters: true
+
+filtering:
+  min_character_length: 50
+  max_character_length: 500000
+  chunk_long_documents: true
+  chunk_max_characters: 4000
+  chunk_overlap_characters: 200
+
+quality:
+  auto_reject_below: 40
+  review_below: 60
+  auto_accept_at_or_above: 60
+  min_turkish_char_ratio: 0.01
+  max_punctuation_ratio: 0.35
+  max_digit_ratio: 0.40
+  max_url_ratio: 0.20
+  max_repeated_char_count: 8
+
+deduplication:
+  enable_exact_dedup: true
+  enable_near_dedup: true
+  near_dedup_threshold: 0.80
+  num_perm: 128
+
+performance:
+  max_workers: 4
+  batch_size: 1000

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turkish Dataset Builder — Türkçe Veri Temizleme & Dataset Builder</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Turkish Dataset Builder</h1>
+            <p>Debian 13 Yerel Web Arayüzü (127.0.0.1)</p>
+        </header>
+
+        <section class="card">
+            <h2>Dizin Yapılandırması</h2>
+            <form id="pipeline-form">
+                <div class="form-group">
+                    <label for="input_dir">Ham Veri Klasörü (RAW Input Directory):</label>
+                    <input type="text" id="input_dir" name="input_dir" placeholder="/path/to/raw/data" required value="/tmp/sample_raw">
+                </div>
+                <div class="form-group">
+                    <label for="output_dir">Hedef Dataset Klasörü (FINAL Output Directory):</label>
+                    <input type="text" id="output_dir" name="output_dir" placeholder="/path/to/dataset_output" required value="/tmp/sample_out">
+                </div>
+                <div class="button-group">
+                    <button type="button" id="btn-analyze" class="btn btn-secondary">1. ANALYZE (Keşfet & İncele)</button>
+                    <button type="button" id="btn-build" class="btn btn-primary">2. BUILD DATASET (Temizle & Oluştur)</button>
+                    <button type="button" id="btn-pause" class="btn btn-warning">Duraklat</button>
+                    <button type="button" id="btn-resume" class="btn btn-success">Devam Et</button>
+                    <button type="button" id="btn-cancel" class="btn btn-danger">İptal Et</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Ayarlar (Configuration Editor)</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Min Karakter Uzunluğu:</label>
+                    <input type="number" id="cfg_min_len" value="50">
+                </div>
+                <div class="form-group">
+                    <label>Max Karakter Uzunluğu:</label>
+                    <input type="number" id="cfg_max_len" value="500000">
+                </div>
+                <div class="form-group">
+                    <label>Near-Dedup Threshold (%):</label>
+                    <input type="number" step="0.05" id="cfg_near_threshold" value="0.80">
+                </div>
+                <div class="form-group">
+                    <label>Auto-Reject Kalite Skor Altı:</label>
+                    <input type="number" id="cfg_reject_below" value="40">
+                </div>
+                <div class="form-group">
+                    <label>Review Queue Skor Altı:</label>
+                    <input type="number" id="cfg_review_below" value="60">
+                </div>
+                <div class="form-group">
+                    <label>Train Oranı:</label>
+                    <input type="number" step="0.01" id="cfg_train_ratio" value="0.98">
+                </div>
+            </div>
+            <button type="button" id="btn-save-cfg" class="btn btn-secondary">Ayarları Kaydet</button>
+        </section>
+
+        <section class="card" id="analysis-section" style="display: none;">
+            <h2>Analiz ve Keşif Sonuçları</h2>
+            <div id="analysis-results"></div>
+        </section>
+
+        <section class="card" id="status-section" style="display: none;">
+            <h2>İşlem Durumu & İstatistikler</h2>
+            <div id="status-results">İşlem bekleniyor...</div>
+        </section>
+
+        <section class="card" id="review-section">
+            <h2>İnceleme Kuyruğu (Review Queue & Before/After Preview)</h2>
+            <div id="review-container">
+                <p>Kuyrukta bekleyen doküman yok.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
